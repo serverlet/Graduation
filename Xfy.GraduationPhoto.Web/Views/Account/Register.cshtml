@@ -1,0 +1,71 @@
+﻿
+@{
+    Layout = null;
+}
+<style>
+    #register_controller {
+        /*margin-top:10rem;*/
+    }
+    #register_controller md-radio-button {
+        display: inline-block;
+    }
+        #register_controller md-content {
+            margin-top:1rem;
+        }
+</style>
+<div id="register_controller" ng-controller="register_controller">
+    <div class="banner">
+        <img class="logo" src="~/images/Album.png" />
+        <div class="text">云相册</div>
+    </div>
+    <md-content layout-padding>
+        <form name="registerForm" novalidate>
+
+            <md-input-container class="md-block">
+                <label>用户名</label>
+                <input maxlength="30" required md-no-asterisk name="username" ng-model="user.username">
+                <div ng-messages="registerForm.username.$error">
+                    <div ng-message="required">用户名不能为空.</div>
+                </div>
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label>邮箱</label>
+                <input required type="email" name="email" ng-model="user.email"
+                       minlength="10" maxlength="100" ng-pattern="/^.+@@.+\..+$/" />
+
+                <div ng-messages="registerForm.email.$error" role="alert">
+                    <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
+                        邮箱格式不正确.
+                    </div>
+                </div>
+            </md-input-container>
+
+            <md-input-container class="md-block">
+                <label>手机号</label>
+                <input required type="number" name="phone" ng-model="user.phone" />
+
+                <div ng-messages="registerForm.phone.$error">
+                    <div ng-message="required">
+                        手机号不能为空
+                    </div>
+                </div>
+            </md-input-container>
+            <div layout-gt-xs="row">
+                <div class="md-block" flex-gt-sm>
+                    <md-radio-group ng-model="user.sex">
+                        <label>性别</label>
+                        <md-radio-button value="2" class="md-primary" md-block>男</md-radio-button>
+                        <md-radio-button value="1" class="md-primary" md-block>女</md-radio-button>
+                        <md-radio-button value="0" class="md-primary" md-block>保密</md-radio-button>
+                    </md-radio-group>
+                </div>
+            </div>
+
+            <div>
+                <md-button class="md-raised right" ng-click="back()">返回登录</md-button>
+                <md-button type="submit" class="md-raised md-primary right">注册</md-button>
+            </div>
+
+        </form>
+    </md-content>
+</div>

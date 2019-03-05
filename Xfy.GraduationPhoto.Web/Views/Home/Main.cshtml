@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>相册</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/angular-material.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/angular-material.min.css" asp-append-version="true" />
+    </environment>
+</head>
+<body ng-app="app">
+    <div class="container body-content" ng-view>
+        
+    </div>
+    <environment include="Development">
+        <script src="~/js/angular.js"></script>
+        <script src="~/js/app.js" asp-append-version="true"></script>
+        <script src="~/js/angular-route.js"></script>
+        <script src="~/js/angular-animate.js"></script>
+        <script src="~/js/angular-aria.js"></script>
+        <script src="~/js/angular-messages.js"></script>
+        <script src="~/js/angular-material.js"></script>
+        <script src="~/controllers/login-controller.js"></script>
+        <script src="~/controllers/home-controller.js"></script>
+        <script src="~/controllers/register-controller.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/js/angular.min.js" asp-append-version="true"></script>
+        <script src="~/js/app.min.js" asp-append-version="true"></script>
+        <script src="~/js/angular-route.min.js" asp-append-version="true"></script>
+        <script src="~/js/angular-animate.min.js" asp-append-version="true"></script>
+        <script src="~/js/angular-aria.js" asp-append-version="true"></script>
+        <script src="~/js/angular-messages.min.js" asp-append-version="true"></script>
+        <script src="~/js/angular-material.min.js" asp-append-version="true"></script>
+        <script src="~/controllers/login-controller.js" asp-append-version="true"></script>
+        <script src="~/controllers/home-controller.js" asp-append-version="true"></script>
+        <script src="~/controllers/register-controller.js" asp-append-version="true"></script>
+    </environment>
+</body>
+</html>

@@ -1,0 +1,81 @@
+﻿
+@{
+    Layout = null;
+}
+<style>
+    #logincontroller {
+        /*background-image: -moz-linear-gradient(top, #31435B, #25364A);
+        background-image: -o-linear-gradient(top, #31435B, #25364A);
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#31435B), to(#25364A));
+        background-image: -webkit-linear-gradient(top, #31435B, #25364A);
+        background-image: linear-gradient(to top, #31435B, #25364A);*/
+        width: 100%;
+        height: 100%;
+    }
+
+        #logincontroller .logo {
+            width: 45%;
+        }
+
+    
+
+    .content {
+        margin-top: 5rem;
+    }
+
+    #logincontroller md-input-container {
+        display: block;
+    }
+
+    #logincontroller label {
+        /*color:white;*/
+    }
+
+    #logincontroller input {
+        /*color: white;*/
+        /*border-bottom-color:white;*/
+    }
+
+    #logincontroller md-content {
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    #logincontroller button {
+        /*color:white;*/
+    }
+</style>
+<div ng-controller="logincontroller" id="logincontroller">
+    <div class="banner">
+        <img class="logo" src="~/images/Album.png" />
+        <div class="text">云相册</div>
+    </div>
+
+    <div class="content">
+        <md-divider></md-divider>
+        <form name="loginForm">
+            <md-content layout-gt-sm="row" layout-padding class="none-color">
+                <md-input-container md-block>
+                    <label>用户名</label>
+                    <input md-maxlength="30" required ng-model="user.username" name="username" />
+                    <div ng-messages="loginForm.username.$error">
+                        <div ng-message="required">请填写用户名.</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container md-block>
+                    <label>密码</label>
+                    <input ng-model="user.password" required type="password" name="password">
+                    <div ng-messages="loginForm.password.$error">
+                        <div ng-message="required">请填写用户名.</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container class="right">
+                    <md-button class="md-raised md-primary">登 录</md-button>
+                    <md-button class="md-raised" ng-click="register()">注 册</md-button>
+                </md-input-container>
+            </md-content>
+        </form>
+    </div>
+</div>

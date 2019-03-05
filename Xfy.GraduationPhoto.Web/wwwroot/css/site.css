@@ -1,0 +1,38 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
+for details on configuring this project to bundle and minify static web assets. */
+body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.container {
+    height: 100%;
+}
+
+.none-color {
+    background-color: inherit;
+}
+
+.right {
+    float: right;
+}
+
+.left {
+    float: left;
+}
+
+.banner {
+    padding-top: 25%;
+    width: 100%;
+    text-align: center;
+    position: relative;
+}
+
+    .banner .text {
+        color: #4BA7FF;
+        font-size: 2.5rem;
+        position: absolute;
+        top: 90%;
+        width: 100%;
+    }
