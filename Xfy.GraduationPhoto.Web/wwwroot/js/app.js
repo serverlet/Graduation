@@ -6,12 +6,12 @@
     'use strict';
 
     angular
-        .module('app', ['ngRoute', 'ngMaterial', 'ngMessages'])
+        .module('app', ['ui.router', 'ngMaterial', 'ngMessages'])
         .config(route);
-    function route($routeProvider) {
-        $routeProvider
-            .when('/login', { templateUrl: '/Account/Login', controller: 'logincontroller' })
-            .when('/register', { templateUrl: '/Account/register', controller: 'register_controller' })
-            .when('/home', { templateUrl: '/Home/index', controller: 'homecontroller' });
+    function route($stateProvider) {
+        $stateProvider.state({ name: 'main', url: '', templateUrl: '/Account/Login', controller: 'logincontroller' });
+        $stateProvider.state({ name: 'login', url: '/login', templateUrl: '/Account/Login', controller: 'logincontroller' });
+        $stateProvider.state({ name: 'register', url: '/register', templateUrl: '/Account/register', controller: 'register_controller' });
+        $stateProvider.state({ name: 'home', url: 'home', templateUrl: '/Home/index', controller: 'homecontroller' });
     }
 })();
