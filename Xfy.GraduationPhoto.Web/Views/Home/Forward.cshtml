@@ -4,8 +4,20 @@
 }
 <style>
     #forward_controller md-grid-tile {
-        background-color:aqua;
-        color:white;
+        /*background-color: #00b1ff;*/
+        color: black;
+    }
+
+    #forward_controller .image-contaner {
+        margin-top:5px;
+        padding:3px;
+    }
+    #forward_controller md-grid-tile {
+        padding:0px;
+    }
+
+    #forward_controller .panel .header {
+        text-align: center;
     }
 </style>
 <div ng-controller="forward_controller" id="forward_controller">
@@ -13,8 +25,8 @@
                 md-selected-nav-item="'forward'"
                 nav-bar-aria-label="navigation links">
         <md-nav-item md-nav-sref="forward" name="forward">回顾</md-nav-item>
-        <md-nav-item md-nav-sref="photo" name="page2" ng-disabled="secondTabDisabled">相片</md-nav-item>
-        <md-nav-item md-nav-sref="albulmn" name="page3">相册</md-nav-item>
+        <md-nav-item md-nav-sref="photo" name="photo">相片</md-nav-item>
+        <md-nav-item md-nav-sref="albulmn" name="albulmn">相册</md-nav-item>
         <div class="toolbtn">
             <md-menu name="setting">
                 <md-button class="md-icon-button" ng-click="$mdMenu.open($event)">
@@ -36,17 +48,28 @@
 
         </div>
     </md-nav-bar>
-    <div style="margin-top:10px;">
-        <md-grid-list md-cols="3" md-row-height="2:2" md-gutter="3px">
-            <md-grid-tile>
-                111
-            </md-grid-tile>
-            <md-grid-tile>
-                222
-            </md-grid-tile>
-            <md-grid-tile>
-                333
-            </md-grid-tile>
-        </md-grid-list>
+    <div class="image-contaner">
+        <div  >
+            <div style="background-color:#646464">
+                <md-grid-list md-cols="4" md-row-height="1:1" md-gutter="1px" style="height:100%;width:100%">
+                    <md-grid-tile md-colspan="4">图示</md-grid-tile>
+                    <md-grid-tile md-rowspan="2" md-colspan="2">图1</md-grid-tile>
+                    <md-grid-tile>图2</md-grid-tile>
+                    <md-grid-tile>图3</md-grid-tile>
+                    <md-grid-tile>图4</md-grid-tile>
+                    <md-grid-tile>图5</md-grid-tile>
+                </md-grid-list>
+            </div>
+            <div style="margin-top:5px;background-color:#646464">
+                <md-grid-list md-cols="4" md-row-height="1:1" md-gutter="1px" style="height:100%;width:100%">
+                    <md-grid-tile md-colspan="4">图示</md-grid-tile>
+                    <md-grid-tile md-rowspan="2" md-colspan="2">图1</md-grid-tile>
+                    <md-grid-tile>图2</md-grid-tile>
+                    <md-grid-tile>图3</md-grid-tile>
+                    <md-grid-tile>图4</md-grid-tile>
+                    <md-grid-tile>图5</md-grid-tile>
+                </md-grid-list>
+            </div>
+        </div>
     </div>
 </div>
