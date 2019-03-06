@@ -7,11 +7,17 @@
 
     angular
         .module('app', ['ui.router', 'ngMaterial', 'ngMessages'])
-        .config(route);
+        .config(route)
+    //.config(icon);
     function route($stateProvider) {
         $stateProvider.state({ name: 'main', url: '', templateUrl: '/Account/Login', controller: 'logincontroller' });
         $stateProvider.state({ name: 'login', url: '/login', templateUrl: '/Account/Login', controller: 'logincontroller' });
-        $stateProvider.state({ name: 'register', url: '/register', templateUrl: '/Account/register', controller: 'register_controller' });
-        $stateProvider.state({ name: 'home', url: 'home', templateUrl: '/Home/index', controller: 'homecontroller' });
+        $stateProvider.state({ name: 'register', url: '/register', templateUrl: '/Account/Register', controller: 'register_controller' });
+        $stateProvider.state({ name: 'index', url: '/index', templateUrl: '/Home/Index', controller: 'index_controller' });
+        $stateProvider.state({ name: 'forward', url: '/forward', templateUrl: '/Home/Forward', controller: 'forward_controller' });
     }
+    //function icon($mdIconProvider) {
+    //    $mdIconProvider
+    //        .iconSet("call", 'images/icons/more_vert.svg');
+    //}
 })();

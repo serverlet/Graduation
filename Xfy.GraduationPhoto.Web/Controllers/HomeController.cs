@@ -10,7 +10,38 @@ namespace Xfy.GraduationPhoto.Web.Controllers
 {
     public class HomeController : Controller
     {
+        /// <summary>
+        /// 应用程序入口页面
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Main()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 回顾
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Forward()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 公用头部
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult _Header()
         {
             return View();
         }

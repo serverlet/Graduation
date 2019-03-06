@@ -32,7 +32,8 @@ body {
     .banner .text {
         color: #4BA7FF;
         font-size: 2.5rem;
-        position: absolute;
+        /*position: absolute;*/
+        margin-top: -2rem;
         top: 90%;
         width: 100%;
     }
@@ -40,3 +41,14 @@ body {
 .logo {
     width: 45%;
 }
+
+md-nav-bar {
+    position: relative;
+    margin-bottom:5px;
+}
+
+    md-nav-bar .toolbtn {
+        position: absolute;
+        margin-top: 5px;
+        right: 0;
+    }

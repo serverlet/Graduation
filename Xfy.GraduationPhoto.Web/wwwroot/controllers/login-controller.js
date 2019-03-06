@@ -26,5 +26,11 @@
             $location.path('register');
         };
 
+        /**
+         * 登录
+         * */
+        $scope.login = function () {
+            $location.path('forward');
+        };
     }
 })();

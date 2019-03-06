@@ -1,0 +1,52 @@
+﻿
+@{
+    Layout = null;
+}
+<style>
+    #forward_controller md-grid-tile {
+        background-color:aqua;
+        color:white;
+    }
+</style>
+<div ng-controller="forward_controller" id="forward_controller">
+    <md-nav-bar md-no-ink-bar="disableInkBar"
+                md-selected-nav-item="'forward'"
+                nav-bar-aria-label="navigation links">
+        <md-nav-item md-nav-sref="forward" name="forward">回顾</md-nav-item>
+        <md-nav-item md-nav-sref="photo" name="page2" ng-disabled="secondTabDisabled">相片</md-nav-item>
+        <md-nav-item md-nav-sref="albulmn" name="page3">相册</md-nav-item>
+        <div class="toolbtn">
+            <md-menu name="setting">
+                <md-button class="md-icon-button" ng-click="$mdMenu.open($event)">
+                    <md-icon md-svg-icon="/images/icons/more_vert.svg"></md-icon>
+                </md-button>
+                <md-menu-content width="1">
+                    <md-menu-item>
+                        <md-button>
+                            我的
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button>
+                            添加照片
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+
+        </div>
+    </md-nav-bar>
+    <div style="margin-top:10px;">
+        <md-grid-list md-cols="3" md-row-height="2:2" md-gutter="3px">
+            <md-grid-tile>
+                111
+            </md-grid-tile>
+            <md-grid-tile>
+                222
+            </md-grid-tile>
+            <md-grid-tile>
+                333
+            </md-grid-tile>
+        </md-grid-list>
+    </div>
+</div>
