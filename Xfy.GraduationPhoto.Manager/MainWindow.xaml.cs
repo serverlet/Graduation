@@ -172,9 +172,17 @@ namespace Xfy.GraduationPhoto.Manager
                 {
                     return;
                 }
+                if (StatusContent.CurrentFolder == dialog.SelectedPath)
+                {
+                    return;
+                }
                 StatusContent.CurrentFolder = dialog.SelectedPath;
                 await LoadImagePath.Get(dialog.SelectedPath);
                 //这里要判断是否是同一个文件加，不是清空队列
+                while (ImagePathQueue.TryDequeue(out FileInfo fileInfo))
+                {
+                    //清空队列
+                }
             }
         }
 
@@ -184,7 +192,7 @@ namespace Xfy.GraduationPhoto.Manager
             if (bitmapImage.PixelWidth > Sp_MainContainer.ActualWidth || bitmapImage.PixelHeight > Sp_MainContainer.ActualHeight)
             {
                 //缩放
-                ImageDisplay.Stretch = System.Windows.Media.Stretch.UniformToFill;
+                ImageDisplay.Stretch = System.Windows.Media.Stretch.Uniform;
                 ImageDisplay.Height = bitmapImage.PixelHeight;
                 ImageDisplay.Width = bitmapImage.PixelWidth;
             }

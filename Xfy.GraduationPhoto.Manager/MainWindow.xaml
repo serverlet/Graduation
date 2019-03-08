@@ -38,7 +38,7 @@
                 </ImageBrush>
             </StackPanel.Background>-->
             <!--<ScrollViewer HorizontalScrollBarVisibility="Auto">-->
-            <Image Source="{Binding Path=ImagePath, Converter={StaticResource ImageConverter}}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Stretch="None" Height="{Binding Path=Height}" Width="{Binding Path=Width}">
+            <Image Source="{Binding Path=ImagePath, Converter={StaticResource ImageConverter}}" VerticalAlignment="Stretch" StretchDirection="Both" HorizontalAlignment="Stretch" Stretch="{Binding Path=Stretch}" Height="{Binding Path=Height}" Width="{Binding Path=Width}">
                 <!--<Image Source="{Binding Path=ImagePath, Converter={StaticResource ImageConverter}}" Stretch="None" Height="10000" Width="1000">-->
 
             </Image>
