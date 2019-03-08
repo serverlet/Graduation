@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace Xfy.GraduationPhoto.Manager
 {
@@ -110,6 +111,7 @@ namespace Xfy.GraduationPhoto.Manager
         private void Img_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             FrameworkElement uIElement;
+            FileInfo imageFile;
             if (e.LeftButton == System.Windows.Input.MouseButtonState.Released)
             {
                 if (ImagePaths == null || ImagePaths.Length == 0)
@@ -130,8 +132,8 @@ namespace Xfy.GraduationPhoto.Manager
                     index = ImagePaths.Length - 1;
                 }
                 ImageDisplay.Index = index;
-                ImageDisplay.ImagePath = ImagePaths[index].FullName;
-                StatusContent.OwnerPath = ImagePaths[index].DirectoryName;
+                imageFile = ImagePaths[index];
+                HanadleImage(imageFile);
             }
         }
 
@@ -142,12 +144,16 @@ namespace Xfy.GraduationPhoto.Manager
         /// <param name="arg2"></param>
         private void LoadImagePath_ReadCompletedHanander(object arg1, Code.ImagePathEventArgs arg2)
         {
+            FileInfo imageFile;
             if (arg2.ImagePaths.Any())
             {
+                imageFile = arg2.ImagePaths.FirstOrDefault();
                 StatusContent.ImageCount = arg2.ImagePaths.Count();
-                ImageDisplay.ImagePath = arg2.ImagePaths.FirstOrDefault().FullName;
+                ImageDisplay.ImagePath = imageFile.FullName;
                 ImageDisplay.Index = 0;
                 ImagePaths = arg2.ImagePaths.ToArray();
+
+                HanadleImage(imageFile);
                 //StatusContent.OwnerPath = ImagePaths[index].DirectoryName;
             }
         }
@@ -170,6 +176,24 @@ namespace Xfy.GraduationPhoto.Manager
                 await LoadImagePath.Get(dialog.SelectedPath);
                 //这里要判断是否是同一个文件加，不是清空队列
             }
+        }
+
+        public void HanadleImage(FileInfo imageFile)
+        {
+            BitmapImage bitmapImage = new BitmapImage(new Uri(imageFile.FullName));
+            if (bitmapImage.PixelWidth > Sp_MainContainer.ActualWidth || bitmapImage.PixelHeight > Sp_MainContainer.ActualHeight)
+            {
+                //缩放
+                ImageDisplay.Stretch = System.Windows.Media.Stretch.UniformToFill;
+                ImageDisplay.Height = bitmapImage.PixelHeight;
+                ImageDisplay.Width = bitmapImage.PixelWidth;
+            }
+            else
+            {
+                ImageDisplay.Stretch = System.Windows.Media.Stretch.None;
+            }
+            ImageDisplay.ImagePath = imageFile.FullName;
+            StatusContent.OwnerPath = imageFile.DirectoryName;
         }
     }
 }
