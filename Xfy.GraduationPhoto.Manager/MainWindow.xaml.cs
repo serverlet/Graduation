@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using Xfy.GraduationPhoto.Manager.Code;
 
 namespace Xfy.GraduationPhoto.Manager
 {
@@ -13,6 +14,8 @@ namespace Xfy.GraduationPhoto.Manager
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static object Locker = new object();
+
         #region 只读字段 
         /// <summary>
         /// 
@@ -94,13 +97,30 @@ namespace Xfy.GraduationPhoto.Manager
         /// <param name="e"></param>
         private void MeunItem_Arrange_Click(object sender, RoutedEventArgs e)
         {
-            ParallelLoopResult state = Parallel.For(0, 10, _ =>
+            ParallelLoopResult state = Parallel.For(0, ImagePaths.Length / 20, _ =>
             {
                 while (ImagePathQueue.TryDequeue(out FileInfo fileInfo))
                 {
                     //TODO...
+                    ImageModel result = ImageHelper.HanadleImage(fileInfo);
+                    string photoDateStr = result.PhotoDate.Value.ToString("yyyy年MM月dd号");
+                    DirectoryInfo directoryInfo = new DirectoryInfo($"{StatusContent.CurrentFolder}\\{photoDateStr}");
+                    lock (Locker)
+                    {
+                        if (!directoryInfo.Exists)
+                        {
+                            directoryInfo.Create();
+                        }
+                    }
+                    fileInfo.CopyTo($"{directoryInfo.FullName}\\{fileInfo.Name}", true);
                 }
             });//10个线程跑
+            while (!state.IsCompleted)
+            {
+                ;
+            }
+            MessageBox.Show("分类完成！", "系统提示");
+            System.Diagnostics.Process.Start("Explorer.exe", StatusContent.CurrentFolder);
         }
 
         /// <summary>
@@ -133,7 +153,7 @@ namespace Xfy.GraduationPhoto.Manager
                 }
                 ImageDisplay.Index = index;
                 imageFile = ImagePaths[index];
-                HanadleImage(imageFile);
+                SetImageStatus(imageFile);
             }
         }
 
@@ -153,7 +173,7 @@ namespace Xfy.GraduationPhoto.Manager
                 ImageDisplay.Index = 0;
                 ImagePaths = arg2.ImagePaths.ToArray();
 
-                HanadleImage(imageFile);
+                SetImageStatus(imageFile);
                 //StatusContent.OwnerPath = ImagePaths[index].DirectoryName;
             }
         }
@@ -176,17 +196,22 @@ namespace Xfy.GraduationPhoto.Manager
                 {
                     return;
                 }
-                StatusContent.CurrentFolder = dialog.SelectedPath;
-                await LoadImagePath.Get(dialog.SelectedPath);
-                //这里要判断是否是同一个文件加，不是清空队列
                 while (ImagePathQueue.TryDequeue(out FileInfo fileInfo))
                 {
                     //清空队列
                 }
+                StatusContent.CurrentFolder = dialog.SelectedPath;
+                await LoadImagePath.Get(dialog.SelectedPath);
+                //这里要判断是否是同一个文件加，不是清空队列
+
             }
         }
 
-        public void HanadleImage(FileInfo imageFile)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="imageFile"></param>
+        private void SetImageStatus(FileInfo imageFile)
         {
             BitmapImage bitmapImage = new BitmapImage(new Uri(imageFile.FullName));
             if (bitmapImage.PixelWidth > Sp_MainContainer.ActualWidth || bitmapImage.PixelHeight > Sp_MainContainer.ActualHeight)

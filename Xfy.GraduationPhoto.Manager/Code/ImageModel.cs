@@ -13,11 +13,11 @@ namespace Xfy.GraduationPhoto.Manager.Code
         /// <summary>
         /// 经度
         /// </summary>
-        public double Longitude { get; set; }
+        public double? Longitude { get; set; }
 
         /// <summary>
         /// 维度
         /// </summary>
-        public double Latitude { get; set; }
+        public double? Latitude { get; set; }
     }
 }

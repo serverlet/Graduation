@@ -14,7 +14,7 @@ namespace Xfy.GraduationPhoto.Manager.Code
 
         public string CurrentFolder
         {
-            get => string.IsNullOrEmpty(_currentFolder) ? string.Empty : $"当前文件夹：{_currentFolder}";
+            get => _currentFolder;
             set
             {
                 _currentFolder = value;
@@ -52,6 +52,8 @@ namespace Xfy.GraduationPhoto.Manager.Code
                 }
             }
         }
+
+        private int _handCount;
 
         public Visibility CountVisibility => _imageCount > 0 ? Visibility.Visible : Visibility.Hidden;
 
