@@ -1,4 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Concurrent;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Xfy.GraduationPhoto.Manager
@@ -6,35 +10,146 @@ namespace Xfy.GraduationPhoto.Manager
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : Window
     {
-        private string _currentPath;
+        #region 只读字段 
+        /// <summary>
+        /// 
+        /// </summary>
+        public readonly Code.LoadImagePath LoadImagePath;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        /// 图片路径队列
+        /// </summary>
+        public readonly ConcurrentQueue<FileInfo> ImagePathQueue;
+        #endregion
 
-        public string CurrentPath
-        {
-            get => _currentPath;
-            set
-            {
-                _currentPath = value;
-                if (PropertyChanged != null && !string.IsNullOrEmpty(value) && (value != _currentPath || !string.IsNullOrEmpty(_currentPath)))
-                {
-                    this.PropertyChanged(this, new PropertyChangedEventArgs("CurrentPath"));
-                };
-            }
-        }
+        #region 属性
+        /// <summary>
+        /// 
+        /// </summary>
+        public Code.StatusContent StatusContent { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public Code.ImageDisplay ImageDisplay { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public FileInfo[] ImagePaths { get; set; }
+        #endregion
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
             this.Loaded += MainWindow_Loaded;
-            this.StatusBar_Status.DataContext = this;
+            StatusContent = new Code.StatusContent();
+            LoadImagePath = new Code.LoadImagePath();
+            ImageDisplay = new Code.ImageDisplay();
+            ImagePathQueue = new ConcurrentQueue<FileInfo>();
+
+            this.StatusBar_Status.DataContext = StatusContent;
+            this.Sp_MainContainer.DataContext = ImageDisplay;
         }
 
+        /// <summary>
+        /// 窗口加载完成
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             this.MeunItem_OpenFolder.Click += MeunItem_OpenFolder_Click;
+            this.MeunItem_Arrange.Click += MeunItem_Arrange_Click;
+
+            this.LoadImagePath.ReadCompletedHanander += LoadImagePath_ReadCompletedHanander;
+            this.LoadImagePath.ReadHanander += LoadImagePath_ReadHanander;
+            this.Img_Prev.MouseUp += Img_MouseUp;
+            this.Img_Next.MouseUp += Img_MouseUp;
+        }
+
+        /// <summary>
+        /// 读取中产生的事件
+        /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="arg2"></param>
+        private void LoadImagePath_ReadHanander(object arg1, Code.ImagePathEventArgs arg2)
+        {
+            foreach (FileInfo item in arg2.ImagePaths)
+            {
+                ImagePathQueue.Enqueue(item);//进入到队列
+            }
+        }
+
+        /// <summary>
+        /// 开始整理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MeunItem_Arrange_Click(object sender, RoutedEventArgs e)
+        {
+            ParallelLoopResult state = Parallel.For(0, 10, _ =>
+            {
+                while (ImagePathQueue.TryDequeue(out FileInfo fileInfo))
+                {
+                    //TODO...
+                }
+            });//10个线程跑
+        }
+
+        /// <summary>
+        /// 左箭头，右箭头的click事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Img_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            FrameworkElement uIElement;
+            if (e.LeftButton == System.Windows.Input.MouseButtonState.Released)
+            {
+                if (ImagePaths == null || ImagePaths.Length == 0)
+                {
+                    return;
+                }
+                uIElement = sender as FrameworkElement;
+                int direction = Convert.ToInt32(uIElement.Tag);
+                //处理
+                int index = ImageDisplay.Index;
+                index += direction * 1;
+                if (index == ImagePaths.Length)
+                {
+                    index = 0;
+                }
+                if (index < 0)
+                {
+                    index = ImagePaths.Length - 1;
+                }
+                ImageDisplay.Index = index;
+                ImageDisplay.ImagePath = ImagePaths[index].FullName;
+                StatusContent.OwnerPath = ImagePaths[index].DirectoryName;
+            }
+        }
+
+        /// <summary>
+        /// 图片完成事件
+        /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="arg2"></param>
+        private void LoadImagePath_ReadCompletedHanander(object arg1, Code.ImagePathEventArgs arg2)
+        {
+            if (arg2.ImagePaths.Any())
+            {
+                StatusContent.ImageCount = arg2.ImagePaths.Count();
+                ImageDisplay.ImagePath = arg2.ImagePaths.FirstOrDefault().FullName;
+                ImageDisplay.Index = 0;
+                ImagePaths = arg2.ImagePaths.ToArray();
+                //StatusContent.OwnerPath = ImagePaths[index].DirectoryName;
+            }
         }
 
         /// <summary>
@@ -42,7 +157,7 @@ namespace Xfy.GraduationPhoto.Manager
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MeunItem_OpenFolder_Click(object sender, RoutedEventArgs e)
+        private async void MeunItem_OpenFolder_Click(object sender, RoutedEventArgs e)
         {
             using (System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog())
             {
@@ -51,7 +166,9 @@ namespace Xfy.GraduationPhoto.Manager
                 {
                     return;
                 }
-                CurrentPath = $"当前文件夹：{dialog.SelectedPath}";
+                StatusContent.CurrentFolder = dialog.SelectedPath;
+                await LoadImagePath.Get(dialog.SelectedPath);
+                //这里要判断是否是同一个文件加，不是清空队列
             }
         }
     }
