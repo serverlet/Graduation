@@ -9,20 +9,35 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="15*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
             <RowDefinition />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <StackPanel Cursor="Hand" Grid.Column="0" Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" x:Name="MenuContainer">
+            <Menu>
+                <MenuItem Header="文件">
+                    <MenuItem Header="打开文件夹" x:Name="MeunItem_OpenFolder"></MenuItem>
+                </MenuItem>
+            </Menu>
+        </StackPanel>
+        <StackPanel Cursor="Hand" Grid.Column="0" Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Image Margin="10,10,10,10" Source="Resource\left.png"/>
         </StackPanel>
-        <StackPanel Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-            <Image UseLayoutRounding="True" Source="Resource\add.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Cursor="Hand">
-            </Image>
+        <StackPanel Grid.Column="1" Grid.Row="1">
+            <StackPanel.Background>
+                <ImageBrush ImageSource="Resource\add.png" Stretch="Uniform">
+                </ImageBrush>
+            </StackPanel.Background>
+            <!--<Viewbox>
+                <Image UseLayoutRounding="True" Source="Resource\add.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="auto" Height="auto" Stretch="None" Cursor="Hand">
+                </Image>
+            </Viewbox>-->
         </StackPanel>
-        <StackPanel Cursor="Hand" Grid.Column="2" Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel Cursor="Hand" Grid.Column="2" Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Image Margin="10,10,10,10" RenderTransformOrigin="0.5,0.5" Source="Resource\left.png">
                 <Image.RenderTransform>
                     <ScaleTransform ScaleX="-1">
@@ -30,6 +45,12 @@
                     </ScaleTransform>
                 </Image.RenderTransform>
             </Image>
+        </StackPanel>
+        <StackPanel Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="2">
+            <StatusBar x:Name="StatusBar_Status">
+                <StatusBarItem Content="{ Binding Path=CurrentPath }"></StatusBarItem>
+                <StatusBarItem></StatusBarItem>
+            </StatusBar>
         </StackPanel>
     </Grid>
 </Window>
