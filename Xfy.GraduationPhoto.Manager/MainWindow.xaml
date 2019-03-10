@@ -81,6 +81,27 @@
                         </Label>
                     </ContentControl>
                 </StatusBarItem>
+                <StatusBarItem>
+                    <ContentControl>
+                        <Label>
+                            <TextBlock>
+                                <Run Text="未处理：" />
+                                <Run Text="{Binding Path=HandCount, Mode=TwoWay}" />
+                                <Run Text="个" />
+                            </TextBlock>
+                        </Label>
+                    </ContentControl>
+                </StatusBarItem>
+
+                <StatusBarItem>
+                    <ContentControl>
+                        <Label>
+                            <TextBlock>
+                                <Run Text="{Binding Path=Status, Mode=TwoWay}" />
+                            </TextBlock>
+                        </Label>
+                    </ContentControl>
+                </StatusBarItem>
             </StatusBar>
         </StackPanel>
     </Grid>

@@ -57,6 +57,30 @@ namespace Xfy.GraduationPhoto.Manager.Code
 
         public Visibility CountVisibility => _imageCount > 0 ? Visibility.Visible : Visibility.Hidden;
 
+        public int HandCount
+        {
+            get => _handCount; set
+            {
+                _handCount = value;
+                if (this.PropertyChanged != null)
+                {
+                    this.PropertyChanged(this, new PropertyChangedEventArgs(nameof(HandCount)));
+                }
+            }
+        }
+
+        public string Status { get => _status; set
+            {
+                _status = value;
+                if (this.PropertyChanged != null)
+                {
+                    this.PropertyChanged(this, new PropertyChangedEventArgs(nameof(Status)));
+                }
+            }
+        }
+
+        private string _status;
+
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

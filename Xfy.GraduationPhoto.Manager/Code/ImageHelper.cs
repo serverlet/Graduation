@@ -3,12 +3,16 @@ using SixLabors.ImageSharp.MetaData.Profiles.Exif;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Primitives;
 using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 
 namespace Xfy.GraduationPhoto.Manager.Code
 {
     public class ImageHelper
     {
+        //private class
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         /// <summary>
         /// 获取图片的拍摄事件经纬度（如果有）
         /// </summary>
@@ -16,6 +20,8 @@ namespace Xfy.GraduationPhoto.Manager.Code
         /// <returns></returns>
         public static ImageModel HanadleImage(FileInfo file)
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             ImageModel model = new ImageModel();
             using (Image<Rgba32> image = Image.Load(file.FullName))
             {
@@ -25,7 +31,8 @@ namespace Xfy.GraduationPhoto.Manager.Code
                     model.PhotoDate = file.CreationTime;
                     return model;
                 }
-                bool isConvertSucced = DateTime.TryParse(photoDateValue?.Value?.ToString(), out DateTime result);//YYYY:MM:DD HH:mm:ss
+                CultureInfo enUS = new CultureInfo("en-US");
+                bool isConvertSucced = DateTime.TryParseExact(photoDateValue?.Value?.ToString(), "yyyy:MM:dd HH:mm:ss", enUS, DateTimeStyles.None, out DateTime result);//YYYY:MM:DD HH:mm:ss
                 if (isConvertSucced)
                 {
                     model.PhotoDate = result;
@@ -55,6 +62,8 @@ namespace Xfy.GraduationPhoto.Manager.Code
                     }
                 }
             }
+            sw.Stop();
+            logger.Debug($"当前线程：{System.Threading.Thread.CurrentThread.ManagedThreadId}\n文件名：{file.FullName}\n耗时：{sw.Elapsed}\n文件大小：{Math.Round(file.Length * 1.0 / 1024 / 1024, 0)}MB\n*******************************************************************\n");
             return model;
         }
     }

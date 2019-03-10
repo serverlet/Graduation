@@ -97,30 +97,54 @@ namespace Xfy.GraduationPhoto.Manager
         /// <param name="e"></param>
         private void MeunItem_Arrange_Click(object sender, RoutedEventArgs e)
         {
-            ParallelLoopResult state = Parallel.For(0, ImagePaths.Length / 20, _ =>
+            //ParallelLoopResult state = Parallel.For(0, 2, _ =>
+            //{
+            //    while (ImagePathQueue.TryDequeue(out FileInfo fileInfo))
+            //    {
+            //        //TODO...
+            //        ImageModel result = ImageHelper.HanadleImage(fileInfo);
+            //        string photoDateStr = result.PhotoDate.Value.ToString("yyyy年MM月dd号");
+            //        DirectoryInfo directoryInfo = new DirectoryInfo($"{StatusContent.CurrentFolder}\\{photoDateStr}");
+            //        lock (Locker)
+            //        {
+            //            if (!directoryInfo.Exists)
+            //            {
+            //                directoryInfo.Create();
+            //            }
+            //            fileInfo.CopyTo($"{directoryInfo.FullName}\\{fileInfo.Name}", true);
+            //        }
+            //    }
+
+            //});//10个线程跑
+
+            Task task = Task.Factory.StartNew(executePhoto, ImagePathQueue);
+            Task task1 = Task.Factory.StartNew(executePhoto, ImagePathQueue);
+            Task task2 = Task.Factory.StartNew(executePhoto, ImagePathQueue);
+            Task task3 = Task.Factory.StartNew(executePhoto, ImagePathQueue);
+            Task task4 = Task.Factory.StartNew(executePhoto, ImagePathQueue);
+
+            Task.Factory.StartNew(async _ =>
             {
-                while (ImagePathQueue.TryDequeue(out FileInfo fileInfo))
-                {
-                    //TODO...
-                    ImageModel result = ImageHelper.HanadleImage(fileInfo);
-                    string photoDateStr = result.PhotoDate.Value.ToString("yyyy年MM月dd号");
-                    DirectoryInfo directoryInfo = new DirectoryInfo($"{StatusContent.CurrentFolder}\\{photoDateStr}");
-                    lock (Locker)
-                    {
-                        if (!directoryInfo.Exists)
-                        {
-                            directoryInfo.Create();
-                        }
-                    }
-                    fileInfo.CopyTo($"{directoryInfo.FullName}\\{fileInfo.Name}", true);
-                }
-            });//10个线程跑
-            while (!state.IsCompleted)
-            {
-                ;
-            }
-            MessageBox.Show("分类完成！", "系统提示");
-            System.Diagnostics.Process.Start("Explorer.exe", StatusContent.CurrentFolder);
+                StatusContent.Status = "整理图片中...";
+                Task t = _ as Task;
+                await t;
+                StatusContent.Status = "图片整理完成";
+            }, Task.WhenAll(task, task1, task2, task3, task4));
+
+            //task.IsCompleted
+            //Task.Factory.StartNew(_ =>
+            //{
+            //    ParallelLoopResult a = (ParallelLoopResult)_;
+            //    while (!a.IsCompleted)
+            //    {
+            //        Task.Delay(1000);
+            //        StatusContent.HandCount = ImagePathQueue.Count;
+            //        GC.Collect();
+            //    }
+            //    MessageBox.Show("分类完成！", "系统提示");
+            //    System.Diagnostics.Process.Start("Explorer.exe", StatusContent.CurrentFolder);
+            //}, state);
+
         }
 
         /// <summary>
@@ -173,6 +197,7 @@ namespace Xfy.GraduationPhoto.Manager
                 ImageDisplay.Index = 0;
                 ImagePaths = arg2.ImagePaths.ToArray();
 
+                StatusContent.HandCount = arg2.ImagePaths.Count();
                 SetImageStatus(imageFile);
                 //StatusContent.OwnerPath = ImagePaths[index].DirectoryName;
             }
@@ -227,6 +252,28 @@ namespace Xfy.GraduationPhoto.Manager
             }
             ImageDisplay.ImagePath = imageFile.FullName;
             StatusContent.OwnerPath = imageFile.DirectoryName;
+
+        }
+
+        private void executePhoto(object _)
+        {
+            ConcurrentQueue<FileInfo> qu = _ as ConcurrentQueue<FileInfo>;
+            while (qu.TryDequeue(out FileInfo fileInfo))
+            {
+                //TODO...
+                ImageModel result = ImageHelper.HanadleImage(fileInfo);
+                string photoDateStr = result.PhotoDate.Value.ToString("yyyy年MM月dd号");
+                DirectoryInfo directoryInfo = new DirectoryInfo($"{StatusContent.CurrentFolder}\\{photoDateStr}");
+                lock (Locker)
+                {
+                    if (!directoryInfo.Exists)
+                    {
+                        directoryInfo.Create();
+                    }
+                    fileInfo.CopyTo($"{directoryInfo.FullName}\\{fileInfo.Name}", true);
+                }
+                StatusContent.HandCount = ImagePathQueue.Count;
+            }
         }
     }
 }
