@@ -23,6 +23,7 @@ namespace Xfy.GraduationPhoto.Manager.Test
                 Code.AmapReturn ama = await amapHelper.Geocode_Regeo(item.Item1, item.Item2);
                 Console.WriteLine(ama.Regeocode.FormattedAddress);
                 Assert.AreEqual(ama.Status, 1);
+                Assert.AreEqual(ama.Info, "OK", false);
             }
         }
     }
