@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -117,11 +118,13 @@ namespace Xfy.GraduationPhoto.Manager
 
             //});//10个线程跑
 
-            Task task = Task.Factory.StartNew(executePhoto, ImagePathQueue);
-            Task task1 = Task.Factory.StartNew(executePhoto, ImagePathQueue);
-            Task task2 = Task.Factory.StartNew(executePhoto, ImagePathQueue);
-            Task task3 = Task.Factory.StartNew(executePhoto, ImagePathQueue);
-            Task task4 = Task.Factory.StartNew(executePhoto, ImagePathQueue);
+            //int maxTask = (ImagePathQueue.Count % 5) == 0 ?;
+            List<Task> tasks = new List<Task>();
+            for (int i = 0; i < 5; i++)
+            {
+                Task task = Task.Factory.StartNew(executePhoto, ImagePathQueue);
+                tasks.Add(task);
+            }
 
             Task.Factory.StartNew(async _ =>
             {
@@ -129,7 +132,9 @@ namespace Xfy.GraduationPhoto.Manager
                 Task t = _ as Task;
                 await t;
                 StatusContent.Status = "图片整理完成";
-            }, Task.WhenAll(task, task1, task2, task3, task4));
+                MessageBox.Show("分类完成！即将打开整理后图片所在文件夹", "系统提示");
+                System.Diagnostics.Process.Start("Explorer.exe", StatusContent.CurrentFolder);
+            }, Task.WhenAll(tasks));
 
             //task.IsCompleted
             //Task.Factory.StartNew(_ =>
