@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xfy.GraduationPhoto.Web", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xfy.GraduationPhoto.Manager", "Xfy.GraduationPhoto.Manager\Xfy.GraduationPhoto.Manager.csproj", "{27E50B07-1E1A-47BE-81D1-A5AC749BD662}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xfy.GraduationPhoto.Manager.Test", "Xfy.GraduationPhoto.Manager.Test\Xfy.GraduationPhoto.Manager.Test.csproj", "{519D5B17-DCAB-413C-BC99-2CE141E5BCB5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{27E50B07-1E1A-47BE-81D1-A5AC749BD662}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27E50B07-1E1A-47BE-81D1-A5AC749BD662}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27E50B07-1E1A-47BE-81D1-A5AC749BD662}.Release|Any CPU.Build.0 = Release|Any CPU
+		{519D5B17-DCAB-413C-BC99-2CE141E5BCB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{519D5B17-DCAB-413C-BC99-2CE141E5BCB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{519D5B17-DCAB-413C-BC99-2CE141E5BCB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{519D5B17-DCAB-413C-BC99-2CE141E5BCB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
