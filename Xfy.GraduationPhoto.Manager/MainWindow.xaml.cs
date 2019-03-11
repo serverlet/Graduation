@@ -98,26 +98,6 @@ namespace Xfy.GraduationPhoto.Manager
         /// <param name="e"></param>
         private void MeunItem_Arrange_Click(object sender, RoutedEventArgs e)
         {
-            //ParallelLoopResult state = Parallel.For(0, 2, _ =>
-            //{
-            //    while (ImagePathQueue.TryDequeue(out FileInfo fileInfo))
-            //    {
-            //        //TODO...
-            //        ImageModel result = ImageHelper.HanadleImage(fileInfo);
-            //        string photoDateStr = result.PhotoDate.Value.ToString("yyyy年MM月dd号");
-            //        DirectoryInfo directoryInfo = new DirectoryInfo($"{StatusContent.CurrentFolder}\\{photoDateStr}");
-            //        lock (Locker)
-            //        {
-            //            if (!directoryInfo.Exists)
-            //            {
-            //                directoryInfo.Create();
-            //            }
-            //            fileInfo.CopyTo($"{directoryInfo.FullName}\\{fileInfo.Name}", true);
-            //        }
-            //    }
-
-            //});//10个线程跑
-
             //int maxTask = (ImagePathQueue.Count % 5) == 0 ?;
             List<Task> tasks = new List<Task>();
             for (int i = 0; i < 5; i++)
@@ -135,20 +115,6 @@ namespace Xfy.GraduationPhoto.Manager
                 MessageBox.Show("分类完成！即将打开整理后图片所在文件夹", "系统提示");
                 System.Diagnostics.Process.Start("Explorer.exe", StatusContent.CurrentFolder);
             }, Task.WhenAll(tasks));
-
-            //task.IsCompleted
-            //Task.Factory.StartNew(_ =>
-            //{
-            //    ParallelLoopResult a = (ParallelLoopResult)_;
-            //    while (!a.IsCompleted)
-            //    {
-            //        Task.Delay(1000);
-            //        StatusContent.HandCount = ImagePathQueue.Count;
-            //        GC.Collect();
-            //    }
-            //    MessageBox.Show("分类完成！", "系统提示");
-            //    System.Diagnostics.Process.Start("Explorer.exe", StatusContent.CurrentFolder);
-            //}, state);
 
         }
 
