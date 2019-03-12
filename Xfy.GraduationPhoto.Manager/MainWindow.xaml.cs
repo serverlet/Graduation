@@ -226,13 +226,13 @@ namespace Xfy.GraduationPhoto.Manager
 
         }
 
-        private void executePhoto(object _)
+        private async Task executePhoto(object _)
         {
             ConcurrentQueue<FileInfo> qu = _ as ConcurrentQueue<FileInfo>;
             while (qu.TryDequeue(out FileInfo fileInfo))
             {
                 //TODO...
-                ImageModel result = ImageHelper.HanadleImage(fileInfo);
+                ImageModel result = await ImageHelper.HanadleImage(fileInfo);
                 string photoDateStr = result.PhotoDate.Value.ToString("yyyy年MM月dd号");
                 DirectoryInfo directoryInfo = new DirectoryInfo($"{StatusContent.CurrentFolder}\\{photoDateStr}");
                 lock (Locker)
@@ -241,7 +241,17 @@ namespace Xfy.GraduationPhoto.Manager
                     {
                         directoryInfo.Create();
                     }
-                    fileInfo.CopyTo($"{directoryInfo.FullName}\\{fileInfo.Name}", true);
+                    string targetPath = $"{directoryInfo.FullName}\\{fileInfo.Name}";
+                    if (!string.IsNullOrEmpty(result.Address))
+                    {
+                        DirectoryInfo sub = new DirectoryInfo($"{directoryInfo.FullName}\\{result.Address}");
+                        if (!sub.Exists)
+                        {
+                            sub.Create();
+                        }
+                        targetPath = sub.FullName;
+                    }
+                    fileInfo.CopyTo(targetPath);
                 }
                 StatusContent.HandCount = ImagePathQueue.Count;
             }

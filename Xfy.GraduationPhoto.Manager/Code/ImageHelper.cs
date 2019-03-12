@@ -4,12 +4,20 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Rational = MetadataExtractor.Rational;
 
 namespace Xfy.GraduationPhoto.Manager.Code
 {
     public class ImageHelper
     {
+        private static readonly AmapHelper amapHelper;
+
+        static ImageHelper()
+        {
+            amapHelper = new AmapHelper();
+        }
+
         //private class
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         /// <summary>
@@ -17,7 +25,7 @@ namespace Xfy.GraduationPhoto.Manager.Code
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        public static ImageModel HanadleImage(FileInfo file)
+        public static async Task<ImageModel> HanadleImage(FileInfo file)
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -84,6 +92,9 @@ namespace Xfy.GraduationPhoto.Manager.Code
                                                                  //Console.WriteLine();
                         model.Latitude = la.ToDouble();
                         model.Longitude = item.GetRationalArray(4).ToDouble();
+
+                        AmapReturn reut = await amapHelper.Geocode_Regeo(model.Longitude.Value, model.Latitude.Value);
+                        model.Address = reut.Regeocode.FormattedAddress;
                         break;
                     default:
                         break;

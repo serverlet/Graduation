@@ -19,5 +19,10 @@ namespace Xfy.GraduationPhoto.Manager.Code
         /// 维度
         /// </summary>
         public double? Latitude { get; set; }
+
+        /// <summary>
+        /// 高德地图格式化之后的地址
+        /// </summary>
+        public string Address { get; internal set; }
     }
 }
