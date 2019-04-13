@@ -73,11 +73,39 @@ namespace Xfy.GraduationPhoto.Manager
         {
             this.MeunItem_OpenFolder.Click += MeunItem_OpenFolder_Click;
             this.MeunItem_Arrange.Click += MeunItem_Arrange_Click;
+            this.MeunItem_About.Click += MeunItem_About_Click;
 
             this.LoadImagePath.ReadCompletedHanander += LoadImagePath_ReadCompletedHanander;
             this.LoadImagePath.ReadHanander += LoadImagePath_ReadHanander;
             this.Img_Prev.MouseUp += Img_MouseUp;
             this.Img_Next.MouseUp += Img_MouseUp;
+            this.ImageMain.MouseWheel += Sp_MainContainer_MouseWheel;
+        }
+
+        private void MeunItem_About_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Sp_MainContainer_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            Point centerPoint = e.GetPosition(Sp_MainContainer);
+            //this.ImageDisplay.RenderTransformOrigin 
+            
+            //ImageDisplay.RenderTransform.CenterX = centerPoint.X;
+            //ImageDisplay.RenderTransform.CenterY = centerPoint.Y;
+
+            //ImageDisplay.RenderTransform.CenterX = this.ActualWidth / 2;
+            //ImageDisplay.RenderTransform.CenterY = this.ActualHeight / 2;
+            ImageDisplay.RenderTransform.Inverse.Transform(centerPoint);
+            if (ImageDisplay.RenderTransform.ScaleX < 0.3 && ImageDisplay.RenderTransform.ScaleY < 0.3 && e.Delta < 0)
+            {
+                return;
+            }
+            ImageDisplay.RenderTransform.CenterX = centerPoint.X;
+            ImageDisplay.RenderTransform.CenterY = centerPoint.Y;
+            ImageDisplay.RenderTransform.ScaleX += (double)e.Delta / 3500;
+            ImageDisplay.RenderTransform.ScaleY += (double)e.Delta / 3500;
         }
 
         /// <summary>
@@ -212,17 +240,28 @@ namespace Xfy.GraduationPhoto.Manager
         private void SetImageStatus(FileInfo imageFile)
         {
             BitmapImage bitmapImage = new BitmapImage(new Uri(imageFile.FullName));
-            if (bitmapImage.PixelWidth > Sp_MainContainer.ActualWidth || bitmapImage.PixelHeight > Sp_MainContainer.ActualHeight)
+            //if (bitmapImage.PixelWidth > Sp_MainContainer.ActualWidth || bitmapImage.PixelHeight > Sp_MainContainer.ActualHeight)
+            //{
+            //    //缩放
+            //    ImageDisplay.Stretch = System.Windows.Media.Stretch.Uniform;
+            //    ImageDisplay.Height = bitmapImage.PixelHeight;
+            //    ImageDisplay.Width = bitmapImage.PixelWidth;
+            //}
+            //else
+            //{
+            //    ImageDisplay.Stretch = System.Windows.Media.Stretch.None;
+            //}
+            if (ImageDisplay.RenderTransform == null)
             {
-                //缩放
-                ImageDisplay.Stretch = System.Windows.Media.Stretch.Uniform;
-                ImageDisplay.Height = bitmapImage.PixelHeight;
-                ImageDisplay.Width = bitmapImage.PixelWidth;
+                ImageDisplay.RenderTransform = new System.Windows.Media.ScaleTransform(1, 1);
+
             }
-            else
-            {
-                ImageDisplay.Stretch = System.Windows.Media.Stretch.None;
-            }
+            ImageDisplay.RenderTransform.ScaleX = 0.3;
+            ImageDisplay.RenderTransform.ScaleY = 0.3;
+            ImageDisplay.RenderTransform.CenterX = this.ActualWidth / 2;
+            ImageDisplay.RenderTransform.CenterY = this.ActualHeight / 2;
+
+            ImageDisplay.RenderTransform = new System.Windows.Media.ScaleTransform(1, 1);
             ImageDisplay.ImagePath = imageFile.FullName;
             StatusContent.OwnerPath = imageFile.DirectoryName;
 

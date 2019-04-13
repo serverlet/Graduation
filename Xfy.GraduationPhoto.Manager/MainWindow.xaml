@@ -10,7 +10,7 @@
     <Window.Resources>
         <converters:ImageConverter x:Key="ImageConverter" />
     </Window.Resources>
-    <Grid>
+    <Grid x:Name="RootElement">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>
             <ColumnDefinition Width="*"/>
@@ -20,25 +20,45 @@
             <RowDefinition Height="auto" />
             <RowDefinition />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" x:Name="MenuContainer">
             <Menu>
                 <MenuItem Header="文件">
                     <MenuItem Header="打开文件夹" x:Name="MeunItem_OpenFolder" IsCheckable="False"></MenuItem>
                     <MenuItem Header="开始整理照片" x:Name="MeunItem_Arrange"></MenuItem>
+                    <MenuItem Header="关于" x:Name="MeunItem_About"></MenuItem>
                 </MenuItem>
             </Menu>
         </StackPanel>
-        <StackPanel Cursor="Hand" Grid.Column="0" Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Image Margin="2, 0, 0,0" Source="Resource\left.png" x:Name="Img_Prev" Tag="-1"/>
-        </StackPanel>
-        <StackPanel Grid.Column="1" Grid.Row="1" x:Name="Sp_MainContainer" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+        <StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" x:Name="Sp_MainContainer" HorizontalAlignment="Center" VerticalAlignment="Center">
             <!--<StackPanel.Background>
                 <ImageBrush Stretch="Uniform" ImageSource="{Binding Path=ImagePath, Converter={StaticResource ImageConverter}}">
                 </ImageBrush>
+            RenderTransformOrigin="{Binding Path=RenderTransformOrigin}"
+            Stretch="{Binding Path=Stretch}" 
+                   Height="{Binding Path=Height}" 
+            
+            Width="{Binding Path=Width}"
+VerticalAlignment="Stretch" 
+                   StretchDirection="Both" 
+                   HorizontalAlignment="Stretch" 
+                   
+            
             </StackPanel.Background>-->
+
             <!--<ScrollViewer HorizontalScrollBarVisibility="Auto">-->
-            <Image Source="{Binding Path=ImagePath, Converter={StaticResource ImageConverter}}" VerticalAlignment="Stretch" StretchDirection="Both" HorizontalAlignment="Stretch" Stretch="{Binding Path=Stretch}" Height="{Binding Path=Height}" Width="{Binding Path=Width}">
+            <Image
+                x:Name="ImageMain"
+                    Source="{Binding Path=ImagePath, Converter={StaticResource ImageConverter}}" 
+                   
+                   RenderTransform="{Binding Path=RenderTransform}"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   Stretch="Uniform"
+                   StretchDirection="Both"
+                   >
                 <!--<Image Source="{Binding Path=ImagePath, Converter={StaticResource ImageConverter}}" Stretch="None" Height="10000" Width="1000">-->
 
             </Image>
@@ -55,19 +75,29 @@
                 </Image>
             </Viewbox>-->
         </StackPanel>
-        <StackPanel Cursor="Hand" Grid.Column="2" Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Image Margin="0,0,2,0" RenderTransformOrigin="0.5,0.5" Source="Resource\left.png" x:Name="Img_Next" Tag="1">
-                <Image.RenderTransform>
-                    <ScaleTransform ScaleX="-1">
 
-                    </ScaleTransform>
-                </Image.RenderTransform>
-            </Image>
+        <StackPanel Orientation="Horizontal" Height="25" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" HorizontalAlignment="Center">
+            <StackPanel Cursor="Hand" Width="25" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Image Margin="0, 0, 0, 0" Source="Resource\left.png" x:Name="Img_Prev" Tag="-1"/>
+            </StackPanel>
+            <StackPanel Width="20">
+                
+            </StackPanel>
+            <StackPanel Cursor="Hand" Width="25" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Image Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" Source="Resource\left.png" x:Name="Img_Next" Tag="1">
+                    <Image.RenderTransform>
+                        <ScaleTransform ScaleX="-1">
+
+                        </ScaleTransform>
+                    </Image.RenderTransform>
+                </Image>
+            </StackPanel>
         </StackPanel>
-        <StackPanel Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="2">
+
+        <StackPanel Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="3">
             <StatusBar x:Name="StatusBar_Status">
                 <StatusBarItem Content="{ Binding Path=CurrentFolder,Mode=OneWay}">
-                    
+
                 </StatusBarItem>
                 <StatusBarItem>
                     <ContentControl>

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Windows;
 using System.Windows.Media;
 
 namespace Xfy.GraduationPhoto.Manager.Code
@@ -23,7 +24,8 @@ namespace Xfy.GraduationPhoto.Manager.Code
 
         public Stretch _stretch;
 
-        public Stretch Stretch {
+        public Stretch Stretch
+        {
             get => _stretch;
             set
             {
@@ -67,11 +69,31 @@ namespace Xfy.GraduationPhoto.Manager.Code
             }
         }
 
+        private System.Windows.Media.ScaleTransform _RenderTransform;
 
+        public System.Windows.Media.ScaleTransform RenderTransform
+        {
+            get => this._RenderTransform;
+            set { _RenderTransform = value; this.PropertyChanged(this, new PropertyChangedEventArgs(nameof(RenderTransform))); }
+        }
+
+        private Point _RenderTransformOrigin;
+
+        public Point RenderTransformOrigin
+        {
+            get => this._RenderTransformOrigin;
+            set { _RenderTransformOrigin = value; this.PropertyChanged(this, new PropertyChangedEventArgs(nameof(RenderTransformOrigin))); }
+        }
 
 
         public int Index { get; internal set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public ImageDisplay()
+        {
+            //RenderTransformOrigin = new Point(0.5, 0.5);
+            //RenderTransform = new ScaleTransform(1, 1);
+        }
     }
 }
