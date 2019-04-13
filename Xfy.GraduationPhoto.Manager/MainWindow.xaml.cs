@@ -15,6 +15,8 @@ namespace Xfy.GraduationPhoto.Manager
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         public static object Locker = new object();
 
         #region 只读字段 
@@ -100,17 +102,17 @@ namespace Xfy.GraduationPhoto.Manager
         {
             //int maxTask = (ImagePathQueue.Count % 5) == 0 ?;
             List<Task> tasks = new List<Task>();
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 1; i++)
             {
                 Task task = Task.Factory.StartNew(executePhoto, ImagePathQueue);
                 tasks.Add(task);
             }
 
-            Task.Factory.StartNew(async _ =>
+            Task.Factory.StartNew(_ =>
             {
                 StatusContent.Status = "整理图片中...";
                 Task t = _ as Task;
-                await t;
+                t.Wait();
                 StatusContent.Status = "图片整理完成";
                 MessageBox.Show("分类完成！即将打开整理后图片所在文件夹", "系统提示");
                 System.Diagnostics.Process.Start("Explorer.exe", StatusContent.CurrentFolder);
@@ -237,23 +239,30 @@ namespace Xfy.GraduationPhoto.Manager
                 DirectoryInfo directoryInfo = new DirectoryInfo($"{StatusContent.CurrentFolder}\\{photoDateStr}");
                 lock (Locker)
                 {
-                    if (!directoryInfo.Exists)
+                    try
                     {
-                        directoryInfo.Create();
-                    }
-                    string targetPath = $"{directoryInfo.FullName}\\{fileInfo.Name}";
-                    if (!string.IsNullOrEmpty(result.Address))
-                    {
-                        DirectoryInfo sub = new DirectoryInfo($"{directoryInfo.FullName}\\{result.Address}");
-                        if (!sub.Exists)
+                        if (!directoryInfo.Exists)
                         {
-                            sub.Create();
+                            directoryInfo.Create();
                         }
-                        targetPath = sub.FullName;
+                        string targetPath = directoryInfo.FullName;
+                        if (!string.IsNullOrEmpty(result.Address))
+                        {
+                            DirectoryInfo sub = new DirectoryInfo($"{directoryInfo.FullName}\\{result.Address}");
+                            if (!sub.Exists)
+                            {
+                                sub.Create();
+                            }
+                            targetPath = sub.FullName;
+                        }
+                        fileInfo.CopyTo($"{targetPath}\\{fileInfo.Name}");
                     }
-                    fileInfo.CopyTo(targetPath);
+                    catch (Exception ex)
+                    {
+                        logger.Error($"FullName:{fileInfo.FullName}\r\nMessage:{ex.Message}\r\nStackTrace:{ex.StackTrace}\r\nInnerException:{ex.InnerException?.ToString()}");
+                    }
+                    StatusContent.HandCount = ImagePathQueue.Count;
                 }
-                StatusContent.HandCount = ImagePathQueue.Count;
             }
         }
     }

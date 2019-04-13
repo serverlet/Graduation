@@ -102,7 +102,7 @@ namespace Xfy.GraduationPhoto.Manager.Code
             }
             //}
             sw.Stop();
-            logger.Debug($"当前线程：{System.Threading.Thread.CurrentThread.ManagedThreadId}\r\n文件名：{file.FullName}\r\n耗时：{sw.Elapsed}\r\n文件大小：{Math.Round(file.Length * 1.0 / 1024 / 1024, 0)}MB\r\n*******************************************************************");
+            //logger.Debug($"当前线程：{System.Threading.Thread.CurrentThread.ManagedThreadId}\r\n文件名：{file.FullName}\r\n耗时：{sw.Elapsed}\r\n文件大小：{Math.Round(file.Length * 1.0 / 1024 / 1024, 0)}MB\r\n*******************************************************************");
             return model;
         }
     }
