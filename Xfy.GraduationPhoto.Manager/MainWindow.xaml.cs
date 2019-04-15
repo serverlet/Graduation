@@ -130,7 +130,7 @@ namespace Xfy.GraduationPhoto.Manager
         {
             //int maxTask = (ImagePathQueue.Count % 5) == 0 ?;
             List<Task> tasks = new List<Task>();
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 3; i++)
             {
                 Task task = Task.Factory.StartNew(executePhoto, ImagePathQueue);
                 tasks.Add(task);

@@ -71,6 +71,7 @@ namespace Xfy.GraduationPhoto.Manager.Code
             //    }
             //} 
             #endregion
+
             IEnumerable<MetadataExtractor.Directory> directories = ImageMetadataReader.ReadMetadata(file.FullName).Where(_ => _.Name == "GPS" || _.Name == "Exif SubIFD");
             if (!directories.Any())
             {
