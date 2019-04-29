@@ -91,7 +91,7 @@ namespace Xfy.GraduationPhoto.Manager
         {
             Point centerPoint = e.GetPosition(Sp_MainContainer);
             //this.ImageDisplay.RenderTransformOrigin 
-            
+
             //ImageDisplay.RenderTransform.CenterX = centerPoint.X;
             //ImageDisplay.RenderTransform.CenterY = centerPoint.Y;
 
@@ -132,19 +132,19 @@ namespace Xfy.GraduationPhoto.Manager
             List<Task> tasks = new List<Task>();
             for (int i = 0; i < 3; i++)
             {
-                Task task = Task.Factory.StartNew(executePhoto, ImagePathQueue);
+                Task task = executePhoto(ImagePathQueue);
                 tasks.Add(task);
             }
+            StatusContent.Status = "整理图片中...";
 
-            Task.Factory.StartNew(_ =>
+            Task.WhenAll(tasks).ContinueWith(new Action<Task>(_ =>
             {
-                StatusContent.Status = "整理图片中...";
-                Task t = _ as Task;
-                t.Wait();
                 StatusContent.Status = "图片整理完成";
                 MessageBox.Show("分类完成！即将打开整理后图片所在文件夹", "系统提示");
                 System.Diagnostics.Process.Start("Explorer.exe", StatusContent.CurrentFolder);
-            }, Task.WhenAll(tasks));
+            }));
+
+
 
         }
 
@@ -276,32 +276,34 @@ namespace Xfy.GraduationPhoto.Manager
                 ImageModel result = await ImageHelper.HanadleImage(fileInfo);
                 string photoDateStr = result.PhotoDate.Value.ToString("yyyy年MM月dd号");
                 DirectoryInfo directoryInfo = new DirectoryInfo($"{StatusContent.CurrentFolder}\\{photoDateStr}");
+                string targetPath = null;
                 lock (Locker)
                 {
-                    try
+                    if (!directoryInfo.Exists)
                     {
-                        if (!directoryInfo.Exists)
-                        {
-                            directoryInfo.Create();
-                        }
-                        string targetPath = directoryInfo.FullName;
-                        if (!string.IsNullOrEmpty(result.Address))
-                        {
-                            DirectoryInfo sub = new DirectoryInfo($"{directoryInfo.FullName}\\{result.Address}");
-                            if (!sub.Exists)
-                            {
-                                sub.Create();
-                            }
-                            targetPath = sub.FullName;
-                        }
-                        fileInfo.CopyTo($"{targetPath}\\{fileInfo.Name}");
+                        directoryInfo.Create();
                     }
-                    catch (Exception ex)
+                    targetPath = directoryInfo.FullName;
+                    if (!string.IsNullOrEmpty(result.Address))
                     {
-                        logger.Error($"FullName:{fileInfo.FullName}\r\nMessage:{ex.Message}\r\nStackTrace:{ex.StackTrace}\r\nInnerException:{ex.InnerException?.ToString()}");
+                        DirectoryInfo sub = new DirectoryInfo($"{directoryInfo.FullName}\\{result.Address}");
+                        if (!sub.Exists)
+                        {
+                            sub.Create();
+                        }
+                        targetPath = sub.FullName;
                     }
-                    StatusContent.HandCount = ImagePathQueue.Count;
+
                 }
+                try
+                {
+                    fileInfo.CopyTo($"{targetPath}\\{fileInfo.Name}");
+                }
+                catch (Exception ex)
+                {
+                    logger.Error($"FullName:{fileInfo.FullName}\r\nMessage:{ex.Message}\r\nStackTrace:{ex.StackTrace}\r\nInnerException:{ex.InnerException?.ToString()}");
+                }
+                StatusContent.HandCount = ImagePathQueue.Count;
             }
         }
     }

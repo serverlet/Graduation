@@ -52,7 +52,6 @@ VerticalAlignment="Stretch"
             <Image
                 x:Name="ImageMain"
                     Source="{Binding Path=ImagePath, Converter={StaticResource ImageConverter}}" 
-                   
                    RenderTransform="{Binding Path=RenderTransform}"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -25,6 +26,16 @@ namespace Xfy.GraduationPhoto.Manager.Test
                 Assert.AreEqual(ama.Status, 1);
                 Assert.AreEqual(ama.Info, "OK", false);
             }
+        }
+
+        [TestMethod]
+        public async Task Db_Test()
+        {
+            using (Code.DbContext.ImageDbContext context = new Code.DbContext.ImageDbContext())
+            {
+                context.ImageModels.Where(_ => true);
+            }
+            Assert.IsTrue(true);
         }
     }
 }
