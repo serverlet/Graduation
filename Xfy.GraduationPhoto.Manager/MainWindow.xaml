@@ -27,6 +27,7 @@
                 <MenuItem Header="文件">
                     <MenuItem Header="打开文件夹" x:Name="MeunItem_OpenFolder" IsCheckable="False"></MenuItem>
                     <MenuItem Header="开始整理照片" x:Name="MeunItem_Arrange"></MenuItem>
+                    <MenuItem Header="搜索照片" x:Name="MeunItem_Search"></MenuItem>
                     <MenuItem Header="关于" x:Name="MeunItem_About"></MenuItem>
                 </MenuItem>
             </Menu>

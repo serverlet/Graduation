@@ -74,12 +74,20 @@ namespace Xfy.GraduationPhoto.Manager
             this.MeunItem_OpenFolder.Click += MeunItem_OpenFolder_Click;
             this.MeunItem_Arrange.Click += MeunItem_Arrange_Click;
             this.MeunItem_About.Click += MeunItem_About_Click;
+            this.MeunItem_Search.Click += MeunItem_Search_Click;
 
             this.LoadImagePath.ReadCompletedHanander += LoadImagePath_ReadCompletedHanander;
             this.LoadImagePath.ReadHanander += LoadImagePath_ReadHanander;
             this.Img_Prev.MouseUp += Img_MouseUp;
             this.Img_Next.MouseUp += Img_MouseUp;
             this.ImageMain.MouseWheel += Sp_MainContainer_MouseWheel;
+        }
+
+        private void MeunItem_Search_Click(object sender, RoutedEventArgs e)
+        {
+            SearchWindow search = new SearchWindow();
+            //search.pos
+            search.ShowDialog();
         }
 
         private void MeunItem_About_Click(object sender, RoutedEventArgs e)
